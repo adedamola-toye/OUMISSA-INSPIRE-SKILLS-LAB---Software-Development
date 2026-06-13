@@ -2,11 +2,8 @@ const prompt = require('prompt-sync')({ sigint: true })
 
 function getValidatedName () {
   const name = prompt('Enter your name: ').trim()
-  while (!name) {
+if (!name) {
       console.log('Name cannot be empty. Please try again.')
-
-  }
-  if (!name) {
     return null
   }
   return name
@@ -41,33 +38,56 @@ function getValidatedActivityLevel () {
   return activityLevel
 }
 
+
+let validatedName = getValidatedName()
+let validatedWeight = getValidatedWeight()
+let validatedActivityLevel = getValidatedActivityLevel()
+
+
+
+// Baseline water intake is 0.035 liters or 35ml per kilogram daily
+function dailyWaterIntake(validatedWeight, validatedActivityLevel) {
+    const baselineWaterIntake = 0.035
+    let dailyWaterIntake = validatedWeight * baselineWaterIntake
+
+    if (validatedActivityLevel === 'low') {
+        dailyWaterIntake += 0
+    } else if (validatedActivityLevel === 'medium') {
+        dailyWaterIntake += 0.5
+    } else if (validatedActivityLevel === 'high') {
+        dailyWaterIntake += 1.0
+    }
+
+    return dailyWaterIntake
+}
+
 function printUserInfo () {
   console.log('======================================')
   console.log('WELCOME TO OUMISSA INSPIRE HYDRATION MONITOR')
   console.log('======================================')
 
-  let validatedName = getValidatedName()
 
   if (validatedName === null) {
     return
   }
 
-  let validatedWeight = getValidatedWeight()
 
   if (validatedWeight === null) {
     return
   }
 
-  let validatedActivityLevel = getValidatedActivityLevel()
 
   if (validatedActivityLevel === null) {
     return
   }
 
+  let waterIntake = dailyWaterIntake(validatedWeight, validatedActivityLevel)
+
   console.log('Here is your information.')
   console.log(`Name: ${validatedName}`)
   console.log(`Weight: ${validatedWeight} kg`)
   console.log(`Activity Level: ${validatedActivityLevel}`)
+  console.log(`Your Recommended Water Intake: ${waterIntake} liters`)
 }
 
 printUserInfo()
